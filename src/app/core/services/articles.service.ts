@@ -39,13 +39,15 @@ export class ArticlesService {
 
   save(article): Observable<Article> {
     // If we're updating an existing article
+    console.log(article);
+
     if (article.slug) {
       return this.apiService.put('/articles/' + article.slug, {article: article})
         .pipe(map(data => data.article));
 
     // Otherwise, create a new article
     } else {
-      return this.apiService.post('/articles/', {article: article})
+      return this.apiService.post('/articles', {article: article})
         .pipe(map(data => data.article));
     }
   }
@@ -58,5 +60,8 @@ export class ArticlesService {
     return this.apiService.delete('/articles/' + slug + '/favorite');
   }
 
+  getgeoloc() {
+    return this.apiService.getextjsonp('https://ip.nf/me.json?');
+  }
 
 }

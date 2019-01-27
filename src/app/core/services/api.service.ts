@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
-import { HttpHeaders, HttpClient, HttpParams } from '@angular/common/http';
+import { HttpHeaders, HttpClient, HttpClientJsonpModule, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { JwtService } from './jwt.service';
@@ -20,6 +20,17 @@ export class ApiService {
 
   get(path: string, params: HttpParams = new HttpParams()): Observable<any> {
     return this.http.get(`${environment.api_url}${path}`, { params })
+      .pipe(catchError(this.formatErrors));
+  }
+
+  getext(url: string, params: HttpParams = new HttpParams()): Observable<any> {
+    return this.http.get(`${url}`, { params })
+      .pipe(catchError(this.formatErrors));
+  }
+
+  getextjsonp(url: string): Observable<any> {
+    // return this.http.jsonp<any>(`${url}`, "callback").subscribe(console.dir);
+    return this.http.jsonp(`${url}`, "callback")
       .pipe(catchError(this.formatErrors));
   }
 

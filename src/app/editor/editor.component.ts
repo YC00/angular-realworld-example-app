@@ -66,14 +66,37 @@ export class EditorComponent implements OnInit {
     // update the model
     this.updateArticle(this.articleForm.value);
 
+    this.articlesService.getgeoloc()
+    .subscribe(response => {
+      this.article.latitude = response.ip.latitude;
+      this.article.longitude = response.ip.longitude;
+      this.article.country = response.ip.country;
+      this.article.city = response.ip.city;
+      this.articlesService.save(this.article).subscribe(
+        article => this.router.navigateByUrl('/article/' + article.slug),
+        err => {
+          this.errors = err;
+          this.isSubmitting = false;
+        }
+      );
+    }, error => {
+      console.error(error);
+    });
+    // if (navigator.geolocation) {
+    //   navigator.geolocation.getCurrentPosition(function(position){
+    //     this.article.latitude = position.coords.latitude;
+    //     this.article.longitude = position.coords.longitude;
+    //   });
+    // }else{
+    //   this.articlesService.getgeoloc()
+    //     .subscribe(response => {
+    //       console.log(response);
+    //     }, error => {
+    //       console.error(error);
+    //     });
+    // }
+
     // post the changes
-    this.articlesService.save(this.article).subscribe(
-      article => this.router.navigateByUrl('/article/' + article.slug),
-      err => {
-        this.errors = err;
-        this.isSubmitting = false;
-      }
-    );
   }
 
   updateArticle(values: Object) {

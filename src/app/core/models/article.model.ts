@@ -11,4 +11,8 @@ export interface Article {
   favorited: boolean;
   favoritesCount: number;
   author: Profile;
+  latitude: number;
+  longitude: number;
+  country: string;
+  city: string;
 }
