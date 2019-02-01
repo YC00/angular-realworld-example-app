@@ -60,8 +60,11 @@ export class ArticlesService {
     return this.apiService.delete('/articles/' + slug + '/favorite');
   }
 
-  getgeoloc() {
+  getGeoLoc() {
     return this.apiService.getextjsonp('https://ip.nf/me.json?');
   }
 
+  searchArticlesWithinRange(range, latitude, longitude) {
+    return this.apiService.getext('http://localhost:3000/api/searcharticles?range='+(range*1000)+'&latitude='+latitude+'&longitude='+longitude);
+  }
 }

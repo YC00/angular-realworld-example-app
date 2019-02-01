@@ -61,7 +61,7 @@ export class EditorComponent implements OnInit {
   }
 
   saveArticles(){
-    this.articlesService.getgeoloc()
+    this.articlesService.getGeoLoc()
         .subscribe(response => {
           if(this.article.latitude==null&&this.article.longitude==null){
             this.article.latitude = response.ip.latitude;

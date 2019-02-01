@@ -9,7 +9,20 @@
 
   <div class="container page">
     <div class="row">
-
+      <div class="col-md-9">
+        <fieldset class="form-group">
+          <input #range class="form-control"
+            type="text"
+            placeholder="Radius Range(km)" />
+        </fieldset>
+      </div>
+      <div class="col-md-3">
+        <button class="btn btn-primary" type="button" (click)="searchWithinRange(range.value)">
+          Search
+        </button>
+      </div>
+    </div>
+    <div class="row">
       <div class="col-md-9">
         <div class="feed-toggle">
           <ul class="nav nav-pills outline-active">

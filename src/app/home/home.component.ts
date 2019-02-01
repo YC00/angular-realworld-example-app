@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { ArticleListConfig, TagsService, UserService } from '../core';
+import { ArticleListConfig, TagsService, UserService, ArticlesService } from '../core';
 
 @Component({
   selector: 'app-home-page',
@@ -10,6 +10,7 @@ import { ArticleListConfig, TagsService, UserService } from '../core';
 })
 export class HomeComponent implements OnInit {
   constructor(
+    private articlesService: ArticlesService,
     private router: Router,
     private tagsService: TagsService,
     private userService: UserService
@@ -22,6 +23,9 @@ export class HomeComponent implements OnInit {
   };
   tags: Array<string> = [];
   tagsLoaded = false;
+  latitude: number = 0;
+  longitude: number = 0;
+  @Input() range: number;
 
   ngOnInit() {
     this.userService.isAuthenticated.subscribe(
@@ -53,5 +57,39 @@ export class HomeComponent implements OnInit {
 
     // Otherwise, set the list object
     this.listConfig = {type: type, filters: filters};
+  }
+
+  getLatitudeLongitude(){
+    this.articlesService.getGeoLoc()
+        .subscribe(response => {
+          if(this.latitude==null&&this.longitude==null){
+            this.latitude = response.ip.latitude;
+            this.longitude = response.ip.longitude;
+          }
+          this.articlesService.searchArticlesWithinRange(this.range, this.latitude, this.longitude).subscribe(
+            articleData => {
+              console.log(articleData);
+            }
+          );
+        }, error => {
+          console.error(error);
+        });
+  }
+
+  searchWithinRange(range: number){
+    alert(range);
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        this.latitude = position.coords.latitude;
+        this.longitude = position.coords.longitude;
+        this.getLatitudeLongitude();
+      }, (error) =>{ 
+        if (error.code == error.PERMISSION_DENIED){
+          this.getLatitudeLongitude();
+        }
+      });
+    }else{
+      this.getLatitudeLongitude();
+    }
   }
 }
