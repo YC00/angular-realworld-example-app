@@ -11,13 +11,13 @@
     <div class="row">
       <div class="col-md-9">
         <fieldset class="form-group">
-          <input #range class="form-control"
+          <input [(ngModel)]="range" class="form-control"
             type="text"
             placeholder="Radius Range(km)" />
         </fieldset>
       </div>
       <div class="col-md-3">
-        <button class="btn btn-primary" type="button" (click)="searchWithinRange(range.value)">
+        <button class="btn btn-primary" type="button" (click)="searchWithinRange(range)">
           Search
         </button>
       </div>
@@ -35,20 +35,29 @@
             </li>
             <li class="nav-item">
               <a class="nav-link"
-                 [ngClass]="{'active': listConfig.type === 'all' && !listConfig.filters.tag}"
+                 [ngClass]="{'active': listConfig.type === 'all' && !listConfig.filters.tag && range.value==0}"
                  (click)="setListTo('all')">
                  Global Feed
               </a>
             </li>
-            <li class="nav-item" [hidden]="!listConfig.filters.tag">
-              <a class="nav-link active">
+            <li class="nav-item" [hidden]="!listConfig.filters.tag || (listConfig.filters.tag&&range>0)">
+              <a class="nav-link"
+              [ngClass]="{'active': listConfig.filters.tag && range==0}"
+              >
                 <i class="ion-pound"></i> {{ listConfig.filters.tag }}
+              </a>
+            </li>
+            <li class="nav-item" [hidden]="range==0">
+              <a class="nav-link"
+              [ngClass]="{'active': range>0}"
+              >
+                <i class="ion-pound"></i> {{ range }}km
               </a>
             </li>
           </ul>
         </div>
 
-        <app-article-list [limit]="10" [config]="listConfig"></app-article-list>
+        <app-article-list [limit]="10" [config]="listConfig" [hidden]="range>0"></app-article-list>
       </div>
 
       <div class="col-md-3">
