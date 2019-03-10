@@ -25,7 +25,7 @@ export class HomeComponent implements OnInit {
   tagsLoaded = false;
   latitude: number = 0;
   longitude: number = 0;
-  @Input() range: number;
+  range: number = 0;
 
   ngOnInit() {
     this.userService.isAuthenticated.subscribe(
@@ -56,6 +56,7 @@ export class HomeComponent implements OnInit {
     }
 
     // Otherwise, set the list object
+    this.range = 0;
     this.listConfig = {type: type, filters: filters};
   }
 
@@ -66,6 +67,7 @@ export class HomeComponent implements OnInit {
             this.latitude = response.ip.latitude;
             this.longitude = response.ip.longitude;
           }
+
           this.articlesService.searchArticlesWithinRange(this.range, this.latitude, this.longitude).subscribe(
             articleData => {
               console.log(articleData);
@@ -76,8 +78,9 @@ export class HomeComponent implements OnInit {
         });
   }
 
-  searchWithinRange(range: number){
-    alert(range);
+  searchWithinRange(rangeNumber: number){
+    this.range = rangeNumber;
+    
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((position) => {
         this.latitude = position.coords.latitude;
